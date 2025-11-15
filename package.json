@@ -1,0 +1,58 @@
+{
+  "name": "@arisyntek/odate",
+  "version": "1.0.1",
+  "description": "A lightweight utility that converts timestamps into clean, human-readable dates.",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "browser": "dist/index.js",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src/ --fix",
+    "format": "prettier --write src/",
+    "format:check": "prettier --check src/"
+  },
+  "keywords": [
+    "date",
+    "date-format",
+    "readable-date",
+    "human-date",
+    "format-date",
+    "date-utils",
+    "datetime-format",
+    "pretty-date",
+    "date-formatter",
+    "user-friendly-date",
+    "date-tools"
+  ],
+  "homepage": "https://github.com/arisyntek/odate",
+  "repository": "arisyntek/odate",
+  "author": "Arisyntek",
+  "license": "MIT",
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "@vitest/coverage-v8": "4.0.8",
+    "eslint": "9.39.1",
+    "eslint-config-prettier": "10.1.8",
+    "prettier": "3.6.2",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.46.3",
+    "vitest": "4.0.8",
+    "jiti": "2.6.1"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ]
+}
