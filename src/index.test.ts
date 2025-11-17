@@ -23,24 +23,24 @@ describe('formatDate', () => {
   });
 
   describe('number timestamps', () => {
-    it('should handle timestamp less than 60 seconds ago', () => {
-      const timestamp = mockNow.getTime() - 30 * 1000; // 30 seconds ago
-      expect(formatDate(timestamp)).toBe('seconds ago');
+    it('should handle timestamp less than 10 seconds ago', () => {
+      const timestamp = mockNow.getTime() - 9 * 1000; // 30 seconds ago
+      expect(formatDate(timestamp)).toBe('just now');
     });
 
     it('should handle timestamp exactly 59 seconds ago', () => {
       const timestamp = mockNow.getTime() - 59 * 1000;
-      expect(formatDate(timestamp)).toBe('seconds ago');
+      expect(formatDate(timestamp)).toBe('a moment ago');
     });
 
     it('should handle timestamp 1 minute ago', () => {
       const timestamp = mockNow.getTime() - 60 * 1000; // 1 minute ago
-      expect(formatDate(timestamp)).toBe('minute ago');
+      expect(formatDate(timestamp)).toBe('a minute ago');
     });
 
     it('should handle timestamp 2 minutes ago', () => {
       const timestamp = mockNow.getTime() - 2 * 60 * 1000; // 2 minutes ago
-      expect(formatDate(timestamp)).toBe('minutes ago');
+      expect(formatDate(timestamp)).toBe('2 minutes ago');
     });
 
     it('should show time only for today (after 3 minutes)', () => {
@@ -76,7 +76,7 @@ describe('formatDate', () => {
     it('should handle nanosecond timestamp as string', () => {
       // Convert to nanoseconds: milliseconds * 1,000,000
       const timestamp = (mockNow.getTime() - 30 * 1000) * 1000000;
-      expect(formatDate(timestamp.toString())).toBe('seconds ago');
+      expect(formatDate(timestamp.toString())).toBe('a moment ago');
     });
 
     it('should handle nanosecond timestamp for yesterday', () => {
@@ -91,34 +91,47 @@ describe('formatDate', () => {
   describe('Date object timestamps', () => {
     it('should handle Date object less than 60 seconds ago', () => {
       const date = new Date(mockNow.getTime() - 30 * 1000);
-      expect(formatDate(date)).toBe('seconds ago');
+      expect(formatDate(date)).toBe('a moment ago');
     });
   });
 
-  describe('full date format', () => {
+  describe('options', () => {
     it('should return full date with seconds', () => {
       const timestamp = mockNow.getTime() - 30 * 1000;
-      const result = formatDate(timestamp, true);
+      const result = formatDate(timestamp, { full: true });
       // Should include seconds in the time format
       expect(result).toMatch(/^Mar 15, \d{2}:\d{2}:\d{2}$/);
+    });
+
+    it('should use 12-hour format when hour12 is true', () => {
+      const timestamp = mockNow.getTime() - 300 * 1000;
+      const result = formatDate(timestamp, { hour12: true });
+      // Should show time with AM/PM
+      expect(result).toMatch(/^\d{1,2}:\d{2}\s?(AM|PM)$/i);
+    });
+
+    it('should add "Today at" prefix when today option is true', () => {
+      const timestamp = mockNow.getTime() - 5 * 60 * 1000; // 5 minutes ago
+      const result = formatDate(timestamp, { today: true });
+      expect(result).toMatch(/^Today at \d{2}:\d{2}$/);
     });
   });
 
   describe('boundary conditions', () => {
     it('should handle exactly 60 seconds (1 minute)', () => {
       const timestamp = mockNow.getTime() - 60 * 1000;
-      expect(formatDate(timestamp)).toBe('minute ago');
+      expect(formatDate(timestamp)).toBe('a minute ago');
     });
 
     it('should handle exactly 120 seconds (2 minutes)', () => {
       const timestamp = mockNow.getTime() - 120 * 1000;
-      expect(formatDate(timestamp)).toBe('minutes ago');
+      expect(formatDate(timestamp)).toBe('2 minutes ago');
     });
 
     it('should handle exactly 180 seconds (3 minutes)', () => {
       const timestamp = mockNow.getTime() - 180 * 1000;
       // Should show time, not "minutes ago"
-      expect(formatDate(timestamp)).toMatch(/^\d{2}:\d{2}$/);
+      expect(formatDate(timestamp)).toMatch('3 minutes ago');
     });
 
     it('should handle midnight edge case for same day', () => {

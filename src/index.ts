@@ -1,10 +1,19 @@
+export type Options = {
+  /** Return full Date **/
+  full?: boolean;
+  /** Whether to use 12-hour time (default to 24-hour time) **/
+  hour12?: boolean;
+  /** Add "Today" prefix to time as "Today at 9:00", default just "9:00" for current day **/
+  today?: boolean;
+};
+
 /**
  * Returns an easy-to-read Date format
- * @param timestamp Timestamp in String on Number or Date
- * @param full Return full Date
+ * @param timestamp String or Number timestamp or Date
+ * @param options Additional options
  * @return formatted String
  */
-export function formatDate(timestamp: number | string | Date, full?: boolean): string {
+export function formatDate(timestamp: number | string | Date, options?: Options): string {
   if (!timestamp) return '';
 
   let date;
@@ -20,12 +29,12 @@ export function formatDate(timestamp: number | string | Date, full?: boolean): s
   const timeFormatter = new Intl.DateTimeFormat(undefined, {
     hour: '2-digit',
     minute: '2-digit',
-    second: full ? '2-digit' : undefined,
-    hour12: false
+    second: options?.full ? '2-digit' : undefined,
+    hour12: options?.hour12 ? true : false
   });
 
   // Return full Date
-  if (full) return fullDate(date, now, timeFormatter);
+  if (options?.full) return fullDate(date, now, timeFormatter);
 
   // Calculate time difference
   const diffMs = now.getTime() - date.getTime();
@@ -33,10 +42,12 @@ export function formatDate(timestamp: number | string | Date, full?: boolean): s
   const diffMinutes = Math.floor(diffSeconds / 60);
 
   // Show relative time for recent timestamps
-  if (diffSeconds < 60) {
-    return 'seconds ago';
-  } else if (diffMinutes < 3) {
-    return `${diffMinutes === 1 ? 'minute' : 'minutes'} ago`;
+  if (diffSeconds < 10) {
+    return 'just now';
+  } else if (diffSeconds < 60) {
+    return 'a moment ago';
+  } else if (diffMinutes < 5) {
+    return `${diffMinutes === 1 ? 'a minute' : `${diffMinutes} minutes`} ago`;
   }
 
   const yesterday = new Date();
@@ -44,7 +55,7 @@ export function formatDate(timestamp: number | string | Date, full?: boolean): s
 
   if (isSameDay(date, now)) {
     // Today
-    return timeFormatter.format(date);
+    return `${options?.today ? 'Today at ' : ''}` + timeFormatter.format(date);
   } else if (isSameDay(date, yesterday)) {
     // Yesterday
     return `Yesterday at ${timeFormatter.format(date)}`;

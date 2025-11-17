@@ -1,6 +1,6 @@
 {
   "name": "@arisyntek/odate",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "A lightweight utility that converts timestamps into clean, human-readable dates.",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -21,7 +21,8 @@
     "test:coverage": "vitest run --coverage",
     "lint": "eslint src/ --fix",
     "format": "prettier --write src/",
-    "format:check": "prettier --check src/"
+    "format:check": "prettier --check src/",
+    "publish": "npm run build && npm publish --access public"
   },
   "keywords": [
     "date",
