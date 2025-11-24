@@ -1,5 +1,5 @@
 export type Options = {
-  /** Return full Date **/
+  /** Return full date with seconds **/
   full?: boolean;
   /** Whether to use 12-hour time (default to 24-hour time) **/
   hour12?: boolean;
@@ -34,7 +34,7 @@ export function formatDate(timestamp: number | string | Date, options?: Options)
   });
 
   // Return full Date
-  if (options?.full) return fullDate(date, now, timeFormatter);
+  if (options?.full || date > now) return fullDate(date, now, timeFormatter);
 
   // Calculate time difference
   const diffMs = now.getTime() - date.getTime();

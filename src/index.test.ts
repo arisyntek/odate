@@ -70,6 +70,11 @@ describe('formatDate', () => {
       const result = formatDate(timestamp);
       expect(result).toMatch(/^2023 Dec 25, \d{2}:\d{2}$/);
     });
+
+    it('should show full date for date in future', () => {
+      const timestamp = mockNow.getTime() + 5 * 60 * 1000;
+      expect(formatDate(timestamp)).toBe('Mar 15, 14:05');
+    });
   });
 
   describe('string timestamps (nanoseconds)', () => {
